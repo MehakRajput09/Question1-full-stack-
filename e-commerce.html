@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mini E-commerce App</title>
+  <style>
+    body.light {
+      background-color: #ffffff;
+      color: #000000;
+    }
+    body.dark {
+      background-color: #121212;
+      color: #ffffff;
+    }
+    .product-card {
+      border: 1px solid #ccc;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+    }
+    .like-btn {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .controls {
+      margin-bottom: 20px;
+    }
+    input {
+      padding: 6px;
+      margin-right: 10px;
+    }
+    button {
+      padding: 6px 12px;
+    }
+  </style>
+</head>
+<body class="light">
+    <!-- 
+    You're building an e-commerce web app.
+
+You have a ProductCard component that displays a product’s name and price.
+Q1: How will you pass these values from the parent component?
+
+Each product has a "Like" button that toggles between "Liked ❤️" and "Like 🤍".
+Q2: How will you implement this toggle using useState?
+
+There’s a search input at the top to filter products as the user types.
+Q3: How will you manage this input using a controlled component approach?
+
+Your app supports light and dark themes.
+Q4: How will you share the current theme across all components using useContext?
+
+The "Checkout" page should only be accessible to logged-in users.
+Q5: How will you protect this route to restrict unauthenticated access?
+     -->
+
+  <div class="controls">
+    <input type="text" id="search" placeholder="Search products..." />
+    <button id="toggleTheme">Toggle Theme</button>
+    <button onclick="goToCheckout()">Go to Checkout</button>
+  </div>
+
+  <div id="products"></div>
+
+  <script>
+    const products = [
+      { name: "Shoes", price: 49.99 },
+      { name: "T-Shirt", price: 19.99 },
+      { name: "Backpack", price: 59.99 },
+      { name: "Watch", price: 89.99 }
+    ];
+
+    const isLoggedIn = false; // Change to true to simulate login
+    const productsContainer = document.getElementById("products");
+    const searchInput = document.getElementById("search");
+
+    // Render product cards
+    function renderProducts(list) {
+      productsContainer.innerHTML = '';
+      list.forEach((product, index) => {
+        const card = document.createElement("div");
+        card.className = "product-card";
+        card.innerHTML = `
+          <h3>${product.name}</h3>
+          <p>Price: ₹${product.price}</p>
+          <button class="like-btn" data-index="${index}">Like 🤍</button>
+        `;
+        productsContainer.appendChild(card);
+      });
+    }
+
+    renderProducts(products);
+
+    // Like button toggle
+    document.addEventListener('click', function (e) {
+      if (e.target.classList.contains('like-btn')) {
+        e.target.textContent =
+          e.target.textContent === 'Like 🤍' ? 'Liked ❤️' : 'Like 🤍';
+      }
+    });
+
+    // Search filter
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value.toLowerCase();
+      const filtered = products.filter(p =>
+        p.name.toLowerCase().includes(query)
+      );
+      renderProducts(filtered);
+    });
+
+    // Theme toggle
+    document.getElementById("toggleTheme").addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      document.body.classList.toggle("light");
+    });
+
+    // Route protection for checkout
+    function goToCheckout() {
+      if (!isLoggedIn) {
+        alert("Access Denied: Please log in to view the checkout page.");
+        // Simulate redirection
+        window.location.href = "login.html";
+      } else {
+        window.location.href = "checkout.html";
+      }
+    }
+  </script>
+
+</body>
+</html>
